@@ -1,6 +1,4 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -73,7 +71,7 @@ const cardData = [
   },
 ];
 
-const SyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   padding: 0,
@@ -90,7 +88,7 @@ const SyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const SyledCardContent = styled(CardContent)({
+const StyledCardContent = styled(CardContent)({
   display: 'flex',
   flexDirection: 'column',
   gap: 4,
@@ -124,16 +122,6 @@ function Author({ authors }: { authors: { name: string; avatar: string }[] }) {
       <Box
         sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
       >
-        <AvatarGroup max={3}>
-          {authors.map((author, index) => (
-            <Avatar
-              key={index}
-              alt={author.name}
-              src={author.avatar}
-              sx={{ width: 24, height: 24 }}
-            />
-          ))}
-        </AvatarGroup>
         <Typography variant="caption">
           {authors.map((author) => author.name).join(', ')}
         </Typography>
@@ -185,9 +173,8 @@ export default function MainContent() {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <div>
         <Typography variant="h1" gutterBottom>
-          Blog
+          Services
         </Typography>
-        <Typography>Stay in the loop with the latest about our products</Typography>
       </div>
       <Box
         sx={{
@@ -270,14 +257,11 @@ export default function MainContent() {
           }}
         >
           <Search />
-          <IconButton size="small" aria-label="RSS feed">
-            <RssFeedRoundedIcon />
-          </IconButton>
         </Box>
       </Box>
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <SyledCard
+          <StyledCard
             variant="outlined"
             onFocus={() => handleFocus(0)}
             onBlur={handleBlur}
@@ -294,7 +278,7 @@ export default function MainContent() {
                 borderColor: 'divider',
               }}
             />
-            <SyledCardContent>
+            <StyledCardContent>
               <Typography gutterBottom variant="caption" component="div">
                 {cardData[0].tag}
               </Typography>
@@ -304,12 +288,12 @@ export default function MainContent() {
               <StyledTypography variant="body2" color="text.secondary" gutterBottom>
                 {cardData[0].description}
               </StyledTypography>
-            </SyledCardContent>
+            </StyledCardContent>
             <Author authors={cardData[0].authors} />
-          </SyledCard>
+          </StyledCard>
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-          <SyledCard
+          <StyledCard
             variant="outlined"
             onFocus={() => handleFocus(1)}
             onBlur={handleBlur}
@@ -326,7 +310,7 @@ export default function MainContent() {
                 borderColor: 'divider',
               }}
             />
-            <SyledCardContent>
+            <StyledCardContent>
               <Typography gutterBottom variant="caption" component="div">
                 {cardData[1].tag}
               </Typography>
@@ -336,12 +320,12 @@ export default function MainContent() {
               <StyledTypography variant="body2" color="text.secondary" gutterBottom>
                 {cardData[1].description}
               </StyledTypography>
-            </SyledCardContent>
+            </StyledCardContent>
             <Author authors={cardData[1].authors} />
-          </SyledCard>
+          </StyledCard>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
-          <SyledCard
+          <StyledCard
             variant="outlined"
             onFocus={() => handleFocus(2)}
             onBlur={handleBlur}
@@ -358,7 +342,7 @@ export default function MainContent() {
                 aspectRatio: { sm: '16 / 9', md: '' },
               }}
             />
-            <SyledCardContent>
+            <StyledCardContent>
               <Typography gutterBottom variant="caption" component="div">
                 {cardData[2].tag}
               </Typography>
@@ -368,15 +352,15 @@ export default function MainContent() {
               <StyledTypography variant="body2" color="text.secondary" gutterBottom>
                 {cardData[2].description}
               </StyledTypography>
-            </SyledCardContent>
+            </StyledCardContent>
             <Author authors={cardData[2].authors} />
-          </SyledCard>
+          </StyledCard>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           <Box
             sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}
           >
-            <SyledCard
+            <StyledCard
               variant="outlined"
               onFocus={() => handleFocus(3)}
               onBlur={handleBlur}
@@ -384,7 +368,7 @@ export default function MainContent() {
               className={focusedCardIndex === 3 ? 'Mui-focused' : ''}
               sx={{ height: '100%' }}
             >
-              <SyledCardContent
+              <StyledCardContent
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -407,10 +391,10 @@ export default function MainContent() {
                     {cardData[3].description}
                   </StyledTypography>
                 </div>
-              </SyledCardContent>
+              </StyledCardContent>
               <Author authors={cardData[3].authors} />
-            </SyledCard>
-            <SyledCard
+            </StyledCard>
+            <StyledCard
               variant="outlined"
               onFocus={() => handleFocus(4)}
               onBlur={handleBlur}
@@ -418,7 +402,7 @@ export default function MainContent() {
               className={focusedCardIndex === 4 ? 'Mui-focused' : ''}
               sx={{ height: '100%' }}
             >
-              <SyledCardContent
+              <StyledCardContent
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -441,13 +425,13 @@ export default function MainContent() {
                     {cardData[4].description}
                   </StyledTypography>
                 </div>
-              </SyledCardContent>
+              </StyledCardContent>
               <Author authors={cardData[4].authors} />
-            </SyledCard>
+            </StyledCard>
           </Box>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
-          <SyledCard
+          <StyledCard
             variant="outlined"
             onFocus={() => handleFocus(5)}
             onBlur={handleBlur}
@@ -464,7 +448,7 @@ export default function MainContent() {
                 aspectRatio: { sm: '16 / 9', md: '' },
               }}
             />
-            <SyledCardContent>
+            <StyledCardContent>
               <Typography gutterBottom variant="caption" component="div">
                 {cardData[5].tag}
               </Typography>
@@ -474,9 +458,9 @@ export default function MainContent() {
               <StyledTypography variant="body2" color="text.secondary" gutterBottom>
                 {cardData[5].description}
               </StyledTypography>
-            </SyledCardContent>
+            </StyledCardContent>
             <Author authors={cardData[5].authors} />
-          </SyledCard>
+          </StyledCard>
         </Grid>
       </Grid>
     </Box>

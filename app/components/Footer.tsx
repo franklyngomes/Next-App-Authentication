@@ -18,7 +18,7 @@ function Copyright() {
     <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
       {'Copyright © '}
       <Link color="text.secondary" href="https://mui.com/">
-        Sitemark
+        Car-Serv
       </Link>
       &nbsp;
       {new Date().getFullYear()}
