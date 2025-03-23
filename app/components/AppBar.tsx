@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import { alpha, styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -14,6 +15,8 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ColorModeIconDropdown from "../../theme/ColorModeIconDropdown";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
+import { UserQuery } from "@/customHooks/query/authQuery";
+import Link from "next/link";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -23,20 +26,31 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
   backdropFilter: "blur(24px)",
   border: "1px solid",
-  borderColor: (theme.vars || theme).palette.divider,
-  backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
-    : alpha(theme.palette.background.default, 0.4),
-  boxShadow: (theme.vars || theme).shadows[1],
+  borderColor: theme.palette.divider,
+  backgroundColor: alpha(theme.palette.background.default, 0.4),
+  boxShadow: theme.shadows[1],
   padding: "8px 12px",
 }));
 
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
+  const [isClient, setIsClient] = React.useState<boolean>(false)
+  const [userName, setUserName] = React.useState<string>("")
+  const {data} = UserQuery()
+
+  React.useEffect(() => {
+    if(data){
+      setUserName(data?.data?.name)
+    }
+    setIsClient(true)
+  })
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+  if(!isClient){
+    return null
+  }
 
   return (
     <AppBar
@@ -55,14 +69,18 @@ export default function AppAppBar() {
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", gap: "20px",px: 0 }}
           >
             <Typography gutterBottom variant="h5" component="div" color="primary">
-              Car-Serv
+              Auth2.0
             </Typography>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button variant="text" color="info" size="small">
-                New Service
+            <Button variant="text" color="info" size="small">
+                <Link href="/home" style={{textDecoration: "none", color: "inherit"}}>
+                Home
+                </Link>
               </Button>
               <Button variant="text" color="info" size="small">
-                My Bookings
+                <Link href="/create" style={{textDecoration: "none", color: "inherit"}}>
+                Create
+                </Link>
               </Button>
             </Box>
           </Box>
@@ -79,7 +97,7 @@ export default function AppAppBar() {
               sx={{ width: 24, height: 24 }}
             />
             <Typography variant="body1" color="primary">
-              Rahul
+              {userName}
             </Typography>
             <Button color="primary" variant="text" size="small">
               Logout

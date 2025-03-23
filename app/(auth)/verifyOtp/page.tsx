@@ -16,10 +16,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormLabel from "@mui/material/FormLabel";
 import { useRouter } from "next/navigation";
+import { VerifyOtpQuery } from "@/customHooks/query/authQuery";
 import toast from "react-hot-toast";
-import { FormControlLabel } from "@mui/material";
-import { Checkbox } from "@mui/material";
-import { ResetPasswordQuery } from "@/customHooks/query/authQuery";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -63,26 +61,12 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 const schema = yup.object({
-  user_id: yup.string(),
-  password: yup
-    .string()
-    .required("Set your password")
-    .min(6, "Password must be at least 6 characters long")
-    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-    .matches(/\d/, "Password must contain at least one number")
-    .matches(
-      /[@$!%*?&]/,
-      "Password must contain at least one special character"
-    ),
+  email: yup.string().email().required("Email is required"),
+  otp: yup.number().required("OTP is required"),
 });
 
-export default function ResetPassword() {
-  const [show, setShow] = React.useState<boolean>(false);
-  const [confirmPassword, setConfirmPassword] = React.useState<string>("");
-  const [passwordError, setPasswordError] = React.useState<string>("");
-  const [userId, setUserId] = React.useState<string>("");
-  const { mutateAsync } = ResetPasswordQuery();
+export default function VerfiyOtp() {
+  const { mutate, data, mutateAsync } = VerifyOtpQuery();
   const [clientReady, setIsClientReady] = React.useState<boolean>(false);
   const router = useRouter();
 
@@ -94,29 +78,20 @@ export default function ResetPassword() {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const handleChange = () => {
-    setShow(!show);
-  };
 
   const onSubmit = async (Data: yup.InferType<typeof schema>) => {
-    if (Data.password !== confirmPassword) {
-      setPasswordError("Passwords do not match");
-      return null;
-    } else {
-      setPasswordError("");
-    }
     const response = await mutateAsync(Data);
+    if (response?.status === 200 || response?.status === true) {
       reset();
       router.push("/signin");
       toast.success(response?.message);
+    } else {
+      toast.error(response?.message);
+    }
+    console.log(response);
   };
-
   React.useEffect(() => {
     setIsClientReady(true);
-    const id = localStorage.getItem("user_id");
-    if (id) {
-      setUserId(id);
-    }
   }, []);
   if (!clientReady) {
     return null;
@@ -140,7 +115,7 @@ export default function ResetPassword() {
             variant="h4"
             sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
           >
-            Reset Password
+            Email verification
           </Typography>
           <Box
             component="form"
@@ -154,19 +129,19 @@ export default function ResetPassword() {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="user_id">User Id</FormLabel>
+              <FormLabel htmlFor="email">Email</FormLabel>
               <TextField
                 fullWidth
-                id="user_id"
-                {...register("user_id")}
-                name="text"
-                defaultValue={userId}
+                id="email"
+                {...register("email")}
+                placeholder="your@email.com"
+                name="email"
+                autoComplete="email"
                 variant="outlined"
-                disabled
               />
-              {errors.user_id && (
+              {errors.email && (
                 <p style={{ color: "red", margin: "0", padding: "5px" }}>
-                  {errors.user_id.message}
+                  {errors.email.message}
                 </p>
               )}
             </FormControl>
@@ -174,38 +149,19 @@ export default function ResetPassword() {
               <FormLabel htmlFor="password">Password</FormLabel>
               <TextField
                 fullWidth
-                {...register("password")}
-                name="password"
-                placeholder="Password"
-                type={show ? "text" : "password"}
-                id="password"
-                autoComplete="new-password"
+                {...register("otp")}
+                name="otp"
+                placeholder="Enter OTP"
+                type="number"
+                id="otp"
                 variant="outlined"
               />
-              {errors.password && (
-                <p style={{ color: "red" }}>{errors.password.message}</p>
+              {errors.otp && (
+                <p style={{ color: "red" }}>{errors.otp.message}</p>
               )}
             </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="password">Confirm Password</FormLabel>
-              <TextField
-                fullWidth
-                name="confirm_password"
-                placeholder="Password"
-                type={show ? "text" : "password"}
-                id="password"
-                autoComplete="new-password"
-                variant="outlined"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
-            </FormControl>
-            <FormControlLabel
-              control={<Checkbox checked={show} onChange={handleChange} />}
-              label="Show Password"
-            />
             <Button type="submit" fullWidth variant="contained">
-              Submit
+              Verify
             </Button>
           </Box>
         </Card>
