@@ -14,8 +14,10 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import RssFeedRoundedIcon from "@mui/icons-material/RssFeedRounded";
-import { CategoriesQuery, ServiceQuery } from "@/customHooks/query/cmsQuery";
+import { DeleteQuery, ListQuery } from "@/customHooks/query/cmsQuery";
 import { CircularProgress } from "@mui/material";
+import {Button} from "@mui/material";
+import toast from "react-hot-toast";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: "flex",
@@ -74,7 +76,10 @@ export function Search() {
   );
 }
 
-export default function MainContent() {
+export default function List() {
+  const {data} = ListQuery()
+  const {mutateAsync} = DeleteQuery()
+
   const [focusedCardIndex, setFocusedCardIndex] = React.useState<number | null>(
     null
   );
@@ -86,19 +91,25 @@ export default function MainContent() {
   const handleBlur = () => {
     setFocusedCardIndex(null);
   };
+  const handleDelete = async (id) => {
+    try{
+      const response = await mutateAsync(id)
+      if(response?.status === 200 || response?.status === true){
+        toast.success(response?.data?.message)
+      }else{
+        toast.error(response?.data?.message || "Failed to delete item")
+      }
+    }catch(error){
+      toast.error(error?.response?.data?.message || "Something went wrong")
+    }
 
-  const handleClick = () => {
-    console.info("You clicked the filter chip.");
-  };
-  const {data: categories, isPending, isError} = CategoriesQuery()
-  const {data: service} = ServiceQuery()
-  console.log(service)
+  }
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
       <div>
         <Typography variant="h1" gutterBottom>
-          Services
+          All Products
         </Typography>
       </div>
       <Box
@@ -134,21 +145,6 @@ export default function MainContent() {
             overflow: "auto",
           }}
         >
-          {
-            categories ? categories.map((item) => (
-              <Chip
-              key={item._id}
-            onClick={handleClick}
-            size="medium"
-            label={item.categoryName}
-            // sx={{
-            //   backgroundColor: "transparent",
-            //   border: "none",
-            // }}
-            />
-          )) 
-        : <div style={{overflow: "hidden"}}><CircularProgress size={20}/></div>
-          }
         </Box>
         <Box
           sx={{
@@ -164,7 +160,7 @@ export default function MainContent() {
       </Box>
       <Grid container spacing={2} columns={12}>
         {
-          service? service.docs.map((item) => (
+          data? data.map((item) => (
         <Grid size={{ xs: 12, md: 6 }} key={item._id}>
           <StyledCard
             variant="outlined"
@@ -176,7 +172,7 @@ export default function MainContent() {
             <CardMedia
               component="img"
               alt="Service"
-              image={item.serviceImage && `https://car-service-server-site-api.onrender.com/${item.serviceImage}`}
+              src="https://picsum.photos/800/450?random"
               sx={{
                 aspectRatio: "16 / 9",
                 borderBottom: "1px solid",
@@ -186,21 +182,39 @@ export default function MainContent() {
             <StyledCardContent>
             <Chip
             size="medium"
-            label={item.category_details.categoryName}
+            label={item.category}
             sx={{
               maxWidth: "100px"
             }}
             />
               <Typography gutterBottom variant="h6" component="div">
-                {item.title}
+                {item.name}
               </Typography>
               <StyledTypography
                 variant="body2"
                 color="text.secondary"
                 gutterBottom
-                dangerouslySetInnerHTML={{ __html: item.description }}
+                sx={{marginBottom: "20px"}}
               >
+                {item.description}
               </StyledTypography>
+              <Box sx={{display: "flex", gap: '20px'}}>
+              <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  >
+                  Update
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  onClick={() => handleDelete(item._id)}
+                  >
+                  Delete
+                </Button>
+                  </Box>
             </StyledCardContent>
           </StyledCard>
         </Grid>
