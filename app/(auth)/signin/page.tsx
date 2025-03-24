@@ -22,6 +22,7 @@ import { SigninQuery } from "@/customHooks/query/authQuery";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -99,11 +100,11 @@ export default function SignIn() {
   };
 
   React.useEffect(() => {
-    setIsClientReady(true)
-  }, [])
+    setIsClientReady(true);
+  }, []);
 
-  if(!clientReady){
-    return null
+  if (!clientReady) {
+    return null;
   }
 
   const onSubmit = async (fields: yup.InferType<typeof schema>) => {
@@ -111,13 +112,17 @@ export default function SignIn() {
       const response = await mutateAsync(fields);
       if (response?.status == true) {
         reset();
-        router.push("/home")
+        router.push("/home");
         toast.success(response?.message);
       } else {
         toast.error(response?.message || "Login Failed");
       }
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
   console.log(data);
@@ -195,7 +200,11 @@ export default function SignIn() {
               Sign in
             </Button>
             <Link
-              style={{ alignSelf: "center", textDecoration: "none", color: "white" }}
+              style={{
+                alignSelf: "center",
+                textDecoration: "none",
+                color: "white",
+              }}
               href="/reset-password"
             >
               Forgot your password?
@@ -205,7 +214,10 @@ export default function SignIn() {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Typography sx={{ textAlign: "center" }}>
               Don&apos;t have an account?{" "}
-              <Link href="/signup" style={{textDecoration: "none", color:"white" }}>
+              <Link
+                href="/signup"
+                style={{ textDecoration: "none", color: "white" }}
+              >
                 Sign up
               </Link>
             </Typography>

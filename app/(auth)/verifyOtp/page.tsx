@@ -66,7 +66,7 @@ const schema = yup.object({
 });
 
 export default function VerfiyOtp() {
-  const { mutate, data, mutateAsync } = VerifyOtpQuery();
+  const {mutateAsync } = VerifyOtpQuery();
   const [clientReady, setIsClientReady] = React.useState<boolean>(false);
   const router = useRouter();
 

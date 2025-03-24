@@ -19,6 +19,7 @@ import AppAppBar from "@/app/components/AppBar";
 import Footer from "@/app/components/Footer";
 import { useParams } from "next/navigation";
 import { SingleItemQuery, UpdateQuery } from "@/customHooks/query/cmsQuery";
+import { AxiosError } from "axios";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -105,7 +106,11 @@ export default  function Update() {
         toast.error(response?.data?.message || "Product updation failed");
       }
     } catch (error) {
-        toast.error(error?.response?.data?.message || "Something went wrong");
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 

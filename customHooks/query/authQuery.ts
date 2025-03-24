@@ -5,12 +5,15 @@ import { SigninFunction } from "@/api/functions/auth/signin.api";
 import { VerifyOtpFunction } from "@/api/functions/auth/verifyOtp.api";
 import { ResetPasswordFunction } from "@/api/functions/auth/resetPassword.api";
 import { GetUserFunction } from "@/api/functions/auth/user.api";
+import { Cookies } from "react-cookie";
 
 export const SignupQuery = () => {
+    const cookie = new Cookies()
     return useMutation({
         mutationFn: SignupFunction,
         onSuccess: (res) => {
             if(res.status === true){
+                cookie.set("user_token", res.token, {path: "/", secure: true})
                 localStorage.setItem("user_token", res.token)
                 localStorage.setItem("user_id", res.user?.id)
             }
@@ -22,10 +25,12 @@ export const SignupQuery = () => {
 
 }
 export const SigninQuery = () => {
+    const cookie = new Cookies()
     return useMutation({
         mutationFn: SigninFunction,
         onSuccess: (res) => {
             if(res.status === true){
+                cookie.set("user_token", res.token, {path: "/", secure: true})
                 localStorage.setItem("user_token", res.token)
                 localStorage.setItem("user_id", res.user?.id)
             }

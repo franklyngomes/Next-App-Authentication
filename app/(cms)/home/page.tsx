@@ -7,7 +7,7 @@ import AppBar from '../../components/AppBar';
 import List from '@/app/components/List';
 import Footer from '../../components/Footer';
 
-export default function Blog(props: { disableCustomTheme?: boolean }) {
+export default function Home() {
   const [isClient, setIsClient] = React.useState<boolean>(false)
 
   React.useEffect(() => {
@@ -18,7 +18,7 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
     return null
   }
   return (
-    <AppTheme {...props}>
+    <AppTheme>
       <CssBaseline enableColorScheme />
 
       <AppBar />

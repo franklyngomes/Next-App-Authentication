@@ -6,7 +6,7 @@ export const VerifyOtpFunction = async(formData : any) => {
         const result = response?.data
         return result
     }catch(error){
-        return (error?.response?.data)
+        return (error)
     }
 
 }

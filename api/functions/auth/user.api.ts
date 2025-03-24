@@ -11,7 +11,7 @@ export const GetUserFunction = async() => {
         const result = response?.data
         return result
     }catch(error){
-        return (error?.response?.data)
+        return (error)
     }
 
 }

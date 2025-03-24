@@ -6,26 +6,26 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid2";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import InputAdornment from "@mui/material/InputAdornment";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import RssFeedRoundedIcon from "@mui/icons-material/RssFeedRounded";
 import { DeleteQuery, ListQuery } from "@/customHooks/query/cmsQuery";
 import { CircularProgress } from "@mui/material";
 import {Button} from "@mui/material";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { AxiosError } from "axios";
+import { Product } from "@/interface/interface";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   padding: 0,
   height: "100%",
-  backgroundColor: (theme.vars || theme).palette.background.paper,
+  backgroundColor: theme.palette.background.paper,
   "&:hover": {
     backgroundColor: "transparent",
     cursor: "pointer",
@@ -78,7 +78,7 @@ export function Search() {
 }
 
 export default function List() {
-  const {data} = ListQuery()
+  const {data} = ListQuery() as {data:  Product[]}
   const {mutateAsync} = DeleteQuery()
 
   const [focusedCardIndex, setFocusedCardIndex] = React.useState<number | null>(
@@ -92,7 +92,7 @@ export default function List() {
   const handleBlur = () => {
     setFocusedCardIndex(null);
   };
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     try{
       const response = await mutateAsync(id)
       if(response?.status === 200){
@@ -101,7 +101,11 @@ export default function List() {
         toast.error(response?.data?.message || "Failed to delete item")
       }
     }catch(error){
-      toast.error(error?.response?.data?.message || "Something went wrong")
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
 
   }

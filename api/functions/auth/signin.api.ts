@@ -6,6 +6,6 @@ import { endPoints } from "@/api/endpoints/endPoints";
         const result = response?.data
         return result;
     }catch(error){
-        return (error?.response?.data)
+        return (error)
     }
  }

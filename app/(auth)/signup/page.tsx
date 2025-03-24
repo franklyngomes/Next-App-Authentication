@@ -21,6 +21,7 @@ import { SignupQuery } from "@/customHooks/query/authQuery";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -113,7 +114,11 @@ export default function SignUp() {
       }
       console.log(data);
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
   React.useEffect(() => {
@@ -209,7 +214,14 @@ export default function SignUp() {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Typography sx={{ textAlign: "center" }}>
               Already have an account?{" "}
-              <Link href="/signin" style={{ alignSelf: "center", textDecoration: "none", color: "white" }}>
+              <Link
+                href="/signin"
+                style={{
+                  alignSelf: "center",
+                  textDecoration: "none",
+                  color: "white",
+                }}
+              >
                 Sign in
               </Link>
             </Typography>

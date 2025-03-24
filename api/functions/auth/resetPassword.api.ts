@@ -12,7 +12,7 @@ export const ResetPasswordFunction = async(formData : any) => {
         console.log(result)
         return result
     }catch(error){
-        return (error?.response?.data)
+        return (error)
     }
 
 }

@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { CreateQuery } from "@/customHooks/query/cmsQuery";
 import AppAppBar from "@/app/components/AppBar";
 import Footer from "@/app/components/Footer";
+import { AxiosError } from "axios";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -68,7 +69,7 @@ const schema = yup.object({
   name: yup.string().required("First name is required").min(3).max(20),
   price: yup.number().required("Price is required"),
   description: yup.string().required("Description").max(160),
-  category: yup.string().required("Category is required").max(15)
+  category: yup.string().required("Category is required").max(15),
 });
 
 export default function Create() {
@@ -86,14 +87,18 @@ export default function Create() {
   const onSubmit = async (Data: yup.InferType<typeof schema>) => {
     try {
       const response = await mutateAsync(Data);
-      if (response?.status === true || response?.status === 201) {
+      if (response?.status === 201) {
         reset();
         toast.success(response?.data?.message);
       } else {
         toast.error(response?.data?.message || "Product creation failed");
       }
     } catch (error) {
-        toast.error(error?.response?.data?.message || "Something went wrong");
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
   React.useEffect(() => {
@@ -108,14 +113,14 @@ export default function Create() {
       <CssBaseline />
       <Container
         sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          height: "100vh",
         }}
       >
         {/* <ColorModeSelect sx={{ position: "fixed", top: "1rem", right: "1rem" }} /> */}
-        <AppAppBar/>
+        <AppAppBar />
         <Card variant="outlined" sx={{ overflow: "visible" }}>
           <Typography
             component="h1"
@@ -195,7 +200,7 @@ export default function Create() {
           </Box>
         </Card>
       </Container>
-        <Footer/>
+      <Footer />
     </AppTheme>
   );
 }
