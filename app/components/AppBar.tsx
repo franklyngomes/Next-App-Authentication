@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from "react";
 import { alpha, styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -7,7 +7,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -17,6 +16,7 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { UserQuery } from "@/customHooks/query/authQuery";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -34,23 +34,30 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
-  const [isClient, setIsClient] = React.useState<boolean>(false)
-  const [userName, setUserName] = React.useState<string>("")
-  const {data} = UserQuery()
+  const [isClient, setIsClient] = React.useState<boolean>(false);
+  const [userName, setUserName] = React.useState<string>("");
+  const router = useRouter();
+  const { data } = UserQuery();
 
   React.useEffect(() => {
-    if(data){
-      setUserName(data?.data?.name)
+    if (data) {
+      setUserName(data?.data?.name);
     }
-    setIsClient(true)
-  })
+    setIsClient(true);
+  }, [data]);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-  if(!isClient){
-    return null
+  if (!isClient) {
+    return null;
   }
+
+  const handleLogout = () => {
+    localStorage.removeItem("user_token");
+    localStorage.removeItem("user_id");
+    router.push("/signin");
+  };
 
   return (
     <AppBar
@@ -66,20 +73,37 @@ export default function AppAppBar() {
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
           <Box
-            sx={{ flexGrow: 1, display: "flex", alignItems: "center", gap: "20px",px: 0 }}
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              alignItems: "center",
+              gap: "20px",
+              px: 0,
+            }}
           >
-            <Typography gutterBottom variant="h5" component="div" color="primary">
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="div"
+              color="primary"
+            >
               Auth2.0
             </Typography>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <Button variant="text" color="info" size="small">
-                <Link href="/home" style={{textDecoration: "none", color: "inherit"}}>
-                Home
+              <Button variant="text" color="info" size="small">
+                <Link
+                  href="/home"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Home
                 </Link>
               </Button>
               <Button variant="text" color="info" size="small">
-                <Link href="/create" style={{textDecoration: "none", color: "inherit"}}>
-                Create
+                <Link
+                  href="/create"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Create
                 </Link>
               </Button>
             </Box>
@@ -99,7 +123,12 @@ export default function AppAppBar() {
             <Typography variant="body1" color="primary">
               {userName}
             </Typography>
-            <Button color="primary" variant="text" size="small">
+            <Button
+              color="primary"
+              variant="text"
+              size="small"
+              onClick={handleLogout}
+            >
               Logout
             </Button>
             <ColorModeIconDropdown />
@@ -130,23 +159,42 @@ export default function AppAppBar() {
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
-                <Divider sx={{ my: 3 }} />
+                <Box sx={{display: "flex", justifyContent: "start", gap: "15px", marginBottom: "15px",alignItems: "center"}}>
+                  <Avatar
+                    alt="User"
+                    src="https://picsum.photos/800/450?random=2"
+                    sx={{ width: 24, height: 24 }}
+                    />
+                  <Typography variant="body1" color="primary">
+                    {userName}
+                  </Typography>
+                    </Box>
                 <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>
-                    Sign up
-                  </Button>
+                  <Link
+                    href="/home"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Home
+                  </Link>
                 </MenuItem>
                 <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
-                    Sign in
-                  </Button>
+                  <Link
+                    href="/create"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Create
+                  </Link>
                 </MenuItem>
+                <Box sx={{display: "flex", justifyContent: "space-between",alignItems: "center"}}>
+                  <Button
+                    color="primary"
+                    variant="text"
+                    size="medium"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </Box>
               </Box>
             </Drawer>
           </Box>

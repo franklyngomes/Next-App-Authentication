@@ -9,14 +9,16 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
-import AppTheme from "../../../theme/AppTheme";
+import AppTheme from "../../../../theme/AppTheme";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { CreateQuery } from "@/customHooks/query/cmsQuery";
 import AppAppBar from "@/app/components/AppBar";
 import Footer from "@/app/components/Footer";
+import { useParams } from "next/navigation";
+import { SingleItemQuery, UpdateQuery } from "@/customHooks/query/cmsQuery";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -67,13 +69,17 @@ const Container = styled(Stack)(({ theme }) => ({
 const schema = yup.object({
   name: yup.string().required("First name is required").min(3).max(20),
   price: yup.number().required("Price is required"),
-  description: yup.string().required("Description").max(160),
+  description: yup.string().required("Description is required").max(160),
   category: yup.string().required("Category is required").max(15)
 });
 
-export default function Create() {
+export default  function Update() {
+  const params = useParams();
+  const slug =  params?.slug as string; 
+  const {data} = SingleItemQuery(slug);
+  const {mutateAsync} = UpdateQuery();
   const [clientReady, setIsClientReady] = React.useState<boolean>(false);
-  const { mutateAsync } = CreateQuery();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -84,23 +90,41 @@ export default function Create() {
   });
 
   const onSubmit = async (Data: yup.InferType<typeof schema>) => {
+    const formData = new FormData();
+    formData.append("name", Data.name);
+    formData.append("price", Data.price.toString());
+    formData.append("description", Data.description);
+    formData.append("category", Data.category);
     try {
-      const response = await mutateAsync(Data);
-      if (response?.status === true || response?.status === 201) {
+      const response = await mutateAsync({id: slug, formData});
+      if (response?.status === 200) {
         reset();
         toast.success(response?.data?.message);
+        router.push('/home')
       } else {
-        toast.error(response?.data?.message || "Product creation failed");
+        toast.error(response?.data?.message || "Product updation failed");
       }
     } catch (error) {
         toast.error(error?.response?.data?.message || "Something went wrong");
     }
   };
+
   React.useEffect(() => {
     setIsClientReady(true);
   }, []);
 
-  if (!clientReady) {
+  React.useEffect(() => {
+  if (data?.data?.product) {
+    reset({
+      name: data.data.product.name,
+      price: data.data.product.price,
+      description: data.data.product.description,
+      category: data.data.product.category
+    });
+  }
+}, [data, reset]);
+
+  if (!clientReady && ! slug) {
     return null;
   }
   return (
@@ -114,7 +138,6 @@ export default function Create() {
             height: "100vh",
         }}
       >
-        {/* <ColorModeSelect sx={{ position: "fixed", top: "1rem", right: "1rem" }} /> */}
         <AppAppBar/>
         <Card variant="outlined" sx={{ overflow: "visible" }}>
           <Typography
@@ -123,7 +146,7 @@ export default function Create() {
             sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
             suppressHydrationWarning
           >
-            Create
+            Update
           </Typography>
           <Box
             component="form"
@@ -135,6 +158,7 @@ export default function Create() {
                 autoComplete="Name"
                 {...register("name")}
                 name="name"
+                defaultValue={data?.data?.product?.name}
                 fullWidth
                 id="name"
                 placeholder="Name"
@@ -150,6 +174,7 @@ export default function Create() {
                 fullWidth
                 id="price"
                 {...register("price")}
+                defaultValue={data?.data?.product?.price}
                 placeholder="Price"
                 name="price"
                 variant="outlined"
@@ -166,6 +191,7 @@ export default function Create() {
                 {...register("description")}
                 name="description"
                 placeholder="Description"
+                defaultValue={data?.data?.product?.description}
                 type="text"
                 multiline
                 id="description"
@@ -181,6 +207,7 @@ export default function Create() {
                 {...register("category")}
                 name="category"
                 placeholder="Category"
+                defaultValue={data?.data?.product?.category}
                 type="text"
                 id="text"
                 variant="outlined"
@@ -190,7 +217,7 @@ export default function Create() {
               )}
             </FormControl>
             <Button type="submit" fullWidth variant="contained">
-              Submit
+              Update
             </Button>
           </Box>
         </Card>

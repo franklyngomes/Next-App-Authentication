@@ -18,6 +18,7 @@ import { DeleteQuery, ListQuery } from "@/customHooks/query/cmsQuery";
 import { CircularProgress } from "@mui/material";
 import {Button} from "@mui/material";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: "flex",
@@ -94,7 +95,7 @@ export default function List() {
   const handleDelete = async (id) => {
     try{
       const response = await mutateAsync(id)
-      if(response?.status === 200 || response?.status === true){
+      if(response?.status === 200){
         toast.success(response?.data?.message)
       }else{
         toast.error(response?.data?.message || "Failed to delete item")
@@ -114,20 +115,6 @@ export default function List() {
       </div>
       <Box
         sx={{
-          display: { xs: "flex", sm: "none" },
-          flexDirection: "row",
-          gap: 1,
-          width: { xs: "100%", md: "fit-content" },
-          overflow: "auto",
-        }}
-      >
-        <Search />
-        <IconButton size="small" aria-label="RSS feed">
-          <RssFeedRoundedIcon />
-        </IconButton>
-      </Box>
-      <Box
-        sx={{
           display: "flex",
           flexDirection: { xs: "column-reverse", md: "row" },
           width: "100%",
@@ -137,26 +124,6 @@ export default function List() {
           overflow: "auto",
         }}
       >
-        <Box
-          sx={{
-            display: "inline-flex",
-            flexDirection: "row",
-            gap: 3,
-            overflow: "auto",
-          }}
-        >
-        </Box>
-        <Box
-          sx={{
-            display: { xs: "none", sm: "flex" },
-            flexDirection: "row",
-            gap: 1,
-            width: { xs: "100%", md: "fit-content" },
-            overflow: "auto",
-          }}
-        >
-          <Search />
-        </Box>
       </Box>
       <Grid container spacing={2} columns={12}>
         {
@@ -199,6 +166,7 @@ export default function List() {
                 {item.description}
               </StyledTypography>
               <Box sx={{display: "flex", gap: '20px'}}>
+                <Link href={`/update/${item._id}`} style={{textDecoration: 'none', color: "inherit"}}>
               <Button
                   variant="contained"
                   color="primary"
@@ -206,6 +174,7 @@ export default function List() {
                   >
                   Update
                 </Button>
+                    </Link>
                 <Button
                   variant="contained"
                   color="error"
