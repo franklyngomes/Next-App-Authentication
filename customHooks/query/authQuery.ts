@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { SignupFunction } from "@/api/functions/auth/signup.api";
-import { SigninFunction } from "@/api/functions/auth/signin.api";
-import { VerifyOtpFunction } from "@/api/functions/auth/verifyOtp.api";
-import { ResetPasswordFunction } from "@/api/functions/auth/resetPassword.api";
-import { GetUserFunction } from "@/api/functions/auth/user.api";
+import { SignupFunction } from "@/app/api/functions/auth/signup.api";
+import { SigninFunction } from "@/app/api/functions/auth/signin.api";
+import { VerifyOtpFunction } from "@/app/api/functions/auth/verifyOtp.api";
+import { ResetPasswordFunction } from "@/app/api/functions/auth/resetPassword.api";
+import { GetUserFunction } from "@/app/api/functions/auth/user.api";
 import { Cookies } from "react-cookie";
 
 export const SignupQuery = () => {
