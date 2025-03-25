@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const config = {
   runtime: "edge",
   matcher: ["/home", "/create", "/"],
 };
-export const middleware = (request: NextRequest) => {
+export const middleware = (request) => {
   const token = request.cookies.get("user_token");
 
   if (!token) {
