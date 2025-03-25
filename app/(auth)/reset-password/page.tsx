@@ -1,4 +1,5 @@
 "use client";
+export const runtime = 'edge';
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -20,6 +21,7 @@ import toast from "react-hot-toast";
 import { FormControlLabel } from "@mui/material";
 import { Checkbox } from "@mui/material";
 import { ResetPasswordQuery } from "@/customHooks/query/authQuery";
+import { IResetPassword } from "@/interface/interface";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -105,7 +107,11 @@ export default function ResetPassword() {
     } else {
       setPasswordError("");
     }
-    const response = await mutateAsync(Data);
+    const requestData : IResetPassword = {
+      user_id: Data.user_id ?? "",
+      password: Data.password
+    }
+    const response = await mutateAsync(requestData);
       reset();
       router.push("/signin");
       toast.success(response?.message);

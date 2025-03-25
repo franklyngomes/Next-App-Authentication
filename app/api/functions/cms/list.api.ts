@@ -1,5 +1,5 @@
-import axiosInstance from "../../axios/axios";
-import { endPoints } from "../../endpoints/endPoints";
+import axiosInstance from "@/api/axios/axios";
+import { endPoints } from "@/api/endpoints/endPoints";
 
 export const ListFunction = async () => {
   const token =  localStorage.getItem("user_token");

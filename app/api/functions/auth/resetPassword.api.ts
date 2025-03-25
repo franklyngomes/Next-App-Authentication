@@ -1,6 +1,7 @@
 import axiosInstance from "@/api/axios/axios";
 import { endPoints } from "@/api/endpoints/endPoints";
-export const ResetPasswordFunction = async(formData : any) => {
+import { IResetPassword } from "@/interface/interface";
+export const ResetPasswordFunction = async(formData : IResetPassword) => {
     try{
         const token = localStorage.getItem("user_token");
         const response = await axiosInstance.post(endPoints.auth.reset_password, formData, {
@@ -14,5 +15,4 @@ export const ResetPasswordFunction = async(formData : any) => {
     }catch(error){
         return (error)
     }
-
 }

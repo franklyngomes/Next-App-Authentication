@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export const config = {
-  runtime: "edge",
+  runtime: 'experimental-edge',
   matcher: ["/home", "/create", "/"],
 };
 export const middleware = (request) => {

@@ -1,6 +1,7 @@
 import axiosInstance from "@/api/axios/axios";
 import { endPoints } from "@/api/endpoints/endPoints";
- export const SigninFunction = async (formData : any) => {
+import { ISignin } from "@/interface/interface";
+ export const SigninFunction = async (formData : ISignin) => {
     try{
         const response = await axiosInstance.post(endPoints.auth.login, formData);
         const result = response?.data

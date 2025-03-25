@@ -1,5 +1,5 @@
 "use client";
-export const runtime = "edge";
+export const dynamic = "force-static";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
