@@ -13,7 +13,7 @@ export const SignupQuery = () => {
         mutationFn: SignupFunction,
         onSuccess: (res) => {
             if(res.status === true){
-                cookie.set("user_token", res.token, { path: "/", secure: true });
+                // cookie.set("user_token", res.token, { path: "/", secure: true });
                 localStorage.setItem("user_token", res.token)
                 localStorage.setItem("user_id", res.user?.id)
             }

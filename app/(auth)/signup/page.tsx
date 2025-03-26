@@ -107,8 +107,8 @@ export default function SignUp() {
       const response = await mutateAsync(Data);
       if (response?.status === true) {
         reset();
-        router.push("/verifyOtp");
         toast.success(response?.message);
+        router.push("/verifyOtp");
       } else {
         toast.error(response?.message || "Signing up failed");
       }
