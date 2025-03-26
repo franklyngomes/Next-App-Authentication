@@ -56,8 +56,6 @@ export default function AppAppBar() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("user_token");
-    localStorage.removeItem("user_id");
     cookie.remove("user_token")
     router.push("/signin");
   };

@@ -110,12 +110,13 @@ export default function SignIn() {
   const onSubmit = async (fields: yup.InferType<typeof schema>) => {
     try {
       const response = await mutateAsync(fields);
+      console.log(response)
       if (response?.status == true) {
         reset();
-        router.push("/home");
         toast.success(response?.message);
+        router.push("/home");
       } else {
-        toast.error(response?.message || "Login Failed");
+        toast.error(response?.response?.data?.message || "Login Failed");
       }
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response?.data?.message) {
@@ -125,7 +126,6 @@ export default function SignIn() {
       }
     }
   };
-  console.log(data);
 
   return (
     <AppTheme>

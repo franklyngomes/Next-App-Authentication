@@ -5,6 +5,7 @@ import { ISignin } from "@/interface/interface";
     try{
         const response = await axiosInstance.post(endPoints.auth.login, formData);
         const result = response?.data
+        console.log(result)
         return result;
     }catch(error){
         return (error)
