@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import { alpha, styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -18,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import { UserQuery } from "@/customHooks/query/authQuery";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Cookies } from "react-cookie";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -38,6 +38,7 @@ export default function AppAppBar() {
   const [isClient, setIsClient] = React.useState<boolean>(false);
   const [userName, setUserName] = React.useState<string>("");
   const router = useRouter();
+  const cookie = new Cookies()
   const { data } = UserQuery();
 
   React.useEffect(() => {
@@ -57,6 +58,7 @@ export default function AppAppBar() {
   const handleLogout = () => {
     localStorage.removeItem("user_token");
     localStorage.removeItem("user_id");
+    cookie.remove("user_token")
     router.push("/signin");
   };
 

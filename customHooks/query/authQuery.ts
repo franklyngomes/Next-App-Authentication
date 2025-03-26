@@ -5,15 +5,15 @@ import { SigninFunction } from "@/app/api/functions/auth/signin.api";
 import { VerifyOtpFunction } from "@/app/api/functions/auth/verifyOtp.api";
 import { ResetPasswordFunction } from "@/app/api/functions/auth/resetPassword.api";
 import { GetUserFunction } from "@/app/api/functions/auth/user.api";
-import { useCookies } from "react-cookie";
+import { Cookies } from "react-cookie";
 
 export const SignupQuery = () => {
-    const [cookies, setCookie] = useCookies(["user_token"]);
+    const cookie = new Cookies()
     return useMutation({
         mutationFn: SignupFunction,
         onSuccess: (res) => {
             if(res.status === true){
-                setCookie("user_token", res.token, { path: "/", secure: true });
+                cookie.set("user_token", res.token, { path: "/", secure: true });
                 localStorage.setItem("user_token", res.token)
                 localStorage.setItem("user_id", res.user?.id)
             }
@@ -25,12 +25,12 @@ export const SignupQuery = () => {
 
 }
 export const SigninQuery = () => {
-    const [cookies, setCookie] = useCookies(["user_token"]);
+   const cookie = new Cookies()
     return useMutation({
         mutationFn: SigninFunction,
         onSuccess: (res) => {
             if(res.status === true){
-                setCookie("user_token", res.token, { path: "/", secure: true });
+                cookie.set("user_token", res.token, { path: "/", secure: true });
                 localStorage.setItem("user_token", res.token)
                 localStorage.setItem("user_id", res.user?.id)
             }
