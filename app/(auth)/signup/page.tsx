@@ -131,7 +131,6 @@ export default function SignUp() {
   return (
     <AppTheme>
       <CssBaseline />
-      <ColorModeSelect sx={{ position: "fixed", top: "1rem", right: "1rem" }} />
       <SignUpContainer
         sx={{
           display: "flex",
@@ -140,6 +139,7 @@ export default function SignUp() {
           height: "100vh",
         }}
       >
+        <ColorModeSelect sx={{ position: "fixed", top: "1rem", right: "1rem" }} />
         <Card variant="outlined" sx={{ overflow: "visible" }}>
           <Typography
             component="h1"
@@ -219,7 +219,7 @@ export default function SignUp() {
                 style={{
                   alignSelf: "center",
                   textDecoration: "none",
-                  color: "white",
+                  color: "inherit",
                 }}
               >
                 Sign in

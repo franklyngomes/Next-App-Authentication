@@ -216,7 +216,7 @@ export default function SignIn() {
               Don&apos;t have an account?{" "}
               <Link
                 href="/signup"
-                style={{ textDecoration: "none", color: "white" }}
+                style={{ textDecoration: "none", color: "inherit" }}
               >
                 Sign up
               </Link>
