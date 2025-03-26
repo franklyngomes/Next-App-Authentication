@@ -83,7 +83,7 @@ const schema = yup.object({
 export default function SignIn() {
   const [show, setShow] = React.useState<boolean>(false);
   const [clientReady, setIsClientReady] = React.useState<boolean>(false);
-  const { data, mutateAsync } = SigninQuery();
+  const { mutateAsync } = SigninQuery();
   const router = useRouter();
 
   const {
@@ -110,7 +110,6 @@ export default function SignIn() {
   const onSubmit = async (fields: yup.InferType<typeof schema>) => {
     try {
       const response = await mutateAsync(fields);
-      console.log(response)
       if (response?.status == true) {
         reset();
         toast.success(response?.message);
